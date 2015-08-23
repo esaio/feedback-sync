@@ -22,7 +22,7 @@ post '/webhook' do
   feedback_id = subject.scan(/\(FB-(\d+)\)/).flatten.first.to_i
 
   # Extract feedback content from Email body
-  feedback_content = body.split(/^\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
+  feedback_content = body.split(/\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
 
   # Get issue number
   redis_key = "feedbacks:#{feedback_id}:issue_number"
