@@ -29,13 +29,13 @@ post '/webhook' do
   issue_number = redis.get(redis_key)
 
   unless issue_number
-    issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:fukayatsu/esa author:aridori", sort: 'created', order: 'asc').items.first
+    issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:#{ENV['REPO']} author:aridori", sort: 'created', order: 'asc').items.first
     issue_number = issue.number
     redis.set(redis_key, issue_number)
   end
 
   # Add comment on the issue
-  octokit.add_comment('fukayatsu/esa', issue_number, "feedback-sync:\n\n#{feedback_content}")
+  octokit.add_comment(ENV['REPO'], issue_number, "feedback-sync:\n\n#{feedback_content}")
 
   logger.info '[github comment] done'
 end
