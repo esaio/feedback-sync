@@ -29,7 +29,7 @@ post '/webhook' do
   issue_number = redis.get(redis_key)
 
   unless issue_number
-    issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:#{ENV['REPO']} author:aridori", sort: 'created', order: 'asc').items.first
+    issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:#{ENV['REPO']} author:aridori", sort: 'created', order: 'desc').items.first
     issue_number = issue.number
     redis.set(redis_key, issue_number)
   end
