@@ -16,7 +16,7 @@ post '/webhook' do
   return unless subject.to_s.match(/^Re:/)
 
   # Extract feedback_id from subject
-  feedback_id = subject.scan(/\(FB-(\d+)\)/).flatten.first.to_i
+  feedback_id = subject.scan(/\(FB-(\d+)\)/).flatten.first
   return unless feedback_id
 
   # Extract feedback content from Email body
