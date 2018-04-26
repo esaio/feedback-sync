@@ -15,6 +15,9 @@ post '/webhook' do
   # Do nothing unless reply
   return unless subject.to_s.match(/^Re:/)
 
+  # Do nothing unless FB-
+  return unless subject.to_s.match(/FB-\d+/)
+
   redis   = Redis.new(url: ENV['REDIS_URL'])
   octokit = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 
