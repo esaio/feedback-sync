@@ -15,19 +15,19 @@ post '/webhook' do
   # Do nothing unless reply
   return unless subject.to_s.match(/^Re:/)
 
-  redis   = Redis.new(url: ENV['REDIS_URL'])
-  octokit = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
-
   # Extract feedback_id from subject
   feedback_id = subject.scan(/\(FB-(\d+)\)/).flatten.first.to_i
+  return unless feedback_id
 
   # Extract feedback content from Email body
   feedback_content = body.split(/\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
 
   # Get issue number
+  redis   = Redis.new(url: ENV['REDIS_URL'])
   redis_key = "feedbacks:#{feedback_id}:issue_number"
   issue_number = redis.get(redis_key)
 
+  octokit = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
   unless issue_number
     issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:#{ENV['REPO']} author:aridori", sort: 'created', order: 'desc').items.first
     issue_number = issue.number
