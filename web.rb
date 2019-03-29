@@ -20,7 +20,7 @@ post '/webhook' do
   return unless feedback_id
 
   # Extract feedback content from Email body
-  feedback_content = body.split(/\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
+  feedback_content = body.gsub(/\R/, "\n").split(/\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
 
   # Get issue number
   redis   = Redis.new(url: ENV['REDIS_URL'])
