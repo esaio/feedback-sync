@@ -4,8 +4,6 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     coderay (1.1.3)
-    daemons (1.3.1)
-    eventmachine (1.2.7)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     foreman (0.87.1)
@@ -13,6 +11,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.2)
     octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
@@ -20,6 +19,8 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.5)
+    puma (4.3.5)
+      nio4r (~> 2.0)
     rack (2.2.2)
     rack-protection (2.0.8.1)
       rack
@@ -33,10 +34,6 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.8.1)
       tilt (~> 2.0)
-    thin (1.7.2)
-      daemons (~> 1.0, >= 1.0.9)
-      eventmachine (~> 1.0, >= 1.0.4)
-      rack (>= 1, < 3)
     tilt (2.0.10)
 
 PLATFORMS
@@ -46,9 +43,9 @@ DEPENDENCIES
   foreman
   octokit
   pry
+  puma
   redis
   sinatra
-  thin
 
 RUBY VERSION
    ruby 2.6.6p146
