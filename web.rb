@@ -3,6 +3,9 @@ require 'json'
 require 'redis'
 require 'octokit'
 
+redis = Redis.new(url: ENV['REDIS_URL'])
+octokit = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
+
 get '/' do
   'ok'
 end
@@ -23,15 +26,22 @@ post '/webhook' do
   feedback_content = body.gsub(/\R/, "\n").split(/\d{4}.\d{1,2}.\d{1,2}.+:$/).first.strip
 
   # Get issue number
-  redis   = Redis.new(url: ENV['REDIS_URL'])
   redis_key = "feedbacks:#{feedback_id}:issue_number"
   issue_number = redis.get(redis_key)
 
-  octokit = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
   unless issue_number
-    issue = octokit.search_issues("[FB-#{feedback_id}] in:title repo:#{ENV['REPO']} author:aridori", sort: 'created', order: 'desc').items.first
-    issue_number = issue.number
-    redis.set(redis_key, issue_number)
+    query = "[FB-#{feedback_id}] in:title repo:#{ENV['REPO']}"
+    query += " author:#{ENV['AUTHOR']}" if ENV['AUTHOR']
+
+    issue = octokit.search_issues(query, sort: 'created', order: 'desc').items.first
+
+    if issue
+      issue_number = issue.number
+      redis.set(redis_key, issue_number)
+    else
+      logger.error "[ERROR] GitHub Issue not found for query: #{query}"
+      return
+    end
   end
 
   # Add comment on the issue
