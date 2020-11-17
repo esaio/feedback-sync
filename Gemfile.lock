@@ -25,7 +25,7 @@ GEM
     rack (2.2.3)
     rack-protection (2.1.0)
       rack
-    redis (4.2.2)
+    redis (4.2.3)
     ruby2_keywords (0.0.2)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
